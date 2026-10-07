@@ -1,0 +1,15 @@
+# Check if the mod_rewrite module is enabled (The "if statement")
+<IfModule mod_rewrite.c>
+    # Turn on the rewrite engine
+    RewriteEngine On
+
+    # EXCEPTION 1: Do not redirect if the request is for an existing directory
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # EXCEPTION 2: Do not redirect if the request is for an existing file
+    RewriteCond %{REQUEST_FILENAME} !-f
+
+    # Redirect everything else to the root index.php
+    # [L] stops processing further rules; [QSA] preserves original query strings (e.g., ?id=5)
+    RewriteRule ^(.*)$ index.php [NC,QSA,L]
+</IfModule>
