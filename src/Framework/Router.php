@@ -11,20 +11,19 @@ class Router
         $this->routes[] = ['path' => $path, 'params' => $params];
     }
 
-    public function matchRoute(string $path): array | bool
+    public function matchRoute(string $path)
     {
         $path = urldecode($path);
 
         $path = trim($path, '/');
 
         foreach ($this->routes as $route) {
-
             $pattern = $this->getRoutePattern($route['path']);
 
             if (preg_match($pattern, $path, $matches)) {
                 $matches = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
 
-                $params = array_merge($matches, $route['params']);
+                $params = array_merge($matches, $route['params'] ?? []);
 
                 return $params;
             }
