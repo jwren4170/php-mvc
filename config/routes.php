@@ -9,9 +9,9 @@ class Routes
         return [
             '/' => ['controller' => 'home', 'action' => 'index'],
             '/home/index' => ['controller' => 'home', 'action' => 'index'],
+            '/home' => ['controller' => 'home', 'action' => 'index'],
             '/products' => ['controller' => 'products', 'action' => 'index'],
             '/{controller}/{id:\d+}/{action}' => [],
-            '/{controller}/{slug:[\w-]+}' => ['controller' => 'products', 'action' => 'show'],
             '/{controller}/{action}' => [],
         ];
     }

@@ -7,21 +7,28 @@ use Framework\Viewer;
 
 class Products
 {
+    public function __construct(
+        private Viewer $viewer,
+        private Product $model,
+    ) {}
+
     public function index()
     {
-        $products = (new Product())->getProducts();
+        $title = 'Products';
+        $products = $this->model->getProducts();
 
-        $viewer = new Viewer();
-
-        echo $viewer->render('Products/index', compact('products'));
+        echo $this->viewer->render('shared/header', compact('title'));
+        echo $this->viewer->render('Products/index', compact('products'));
+        echo $this->viewer->render('shared/footer');
     }
 
     public function show(string $id)
     {
-        $product = (new Product())->getProduct($id);
+        $title = 'Product Details';
+        $product = $this->model->getProduct($id);
 
-        $viewer = new Viewer();
-
-        echo $viewer->render('Products/show', compact('product'));
+        echo $this->viewer->render('shared/header', compact('title'));
+        echo $this->viewer->render('Products/show', compact('product'));
+        echo $this->viewer->render('shared/footer');
     }
 }

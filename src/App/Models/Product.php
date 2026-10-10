@@ -7,7 +7,6 @@ use PDOException;
 
 class Product
 {
-
     public function getProducts()
     {
         $host = 'localhost';
@@ -17,20 +16,18 @@ class Product
         $port = 5432;
 
         try {
-
             $options = [
-                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
             ];
 
             $conn = new PDO("pgsql:host=$host;port=$port;dbname=$database", $user, $password, $options);
         } catch (PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
+            echo 'Connection failed: ' . $e->getMessage();
             exit;
         }
 
-
-        $sql = "SELECT * FROM product";
+        $sql = 'SELECT * FROM product';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll();
@@ -45,19 +42,18 @@ class Product
         $port = 5432;
 
         try {
-
             $options = [
-                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
             ];
 
             $conn = new PDO("pgsql:host=$host;port=$port;dbname=$database", $user, $password, $options);
         } catch (PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
+            echo 'Connection failed: ' . $e->getMessage();
             exit;
         }
 
-        $sql = "SELECT * FROM product WHERE id = :id";
+        $sql = 'SELECT * FROM product WHERE id = :id';
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
