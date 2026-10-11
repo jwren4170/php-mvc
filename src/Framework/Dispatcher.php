@@ -4,6 +4,7 @@ namespace Framework;
 
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionNamedType;
 
 class Dispatcher
 {
@@ -22,23 +23,42 @@ class Dispatcher
         $action = $this->getActionName($params);
         $controller = $this->getControllerName($params);
 
-        $reflector = new ReflectionClass($controller);
-        $constructor = $reflector->getConstructor();
-
-        $dependencies = [];
-
-        if ($constructor !== null) {
-            foreach ($constructor->getParameters() as $parameter) {
-                $type = (string) $parameter->getType();
-                $dependencies[] = new $type();
-            }
-        }
-
-        $controller_object = new $controller(...$dependencies);
+        $controller_object = $this->createInstance($controller);
 
         $args = $this->getActionArgs($controller, $action, $params);
 
         $controller_object->$action(...array_values($args));
+    }
+
+    private function createInstance(string $class): object
+    {
+        $reflector = new ReflectionClass($class);
+        $constructor = $reflector->getConstructor();
+
+        if ($constructor === null) {
+            return $reflector->newInstance();
+        }
+
+        $dependencies = [];
+
+        foreach ($constructor->getParameters() as $parameter) {
+            $type = $parameter->getType();
+
+            if (!$type instanceof ReflectionNamedType || $type->isBuiltin()) {
+                if ($parameter->isDefaultValueAvailable()) {
+                    $dependencies[] = $parameter->getDefaultValue();
+                    continue;
+                }
+
+                throw new \LogicException(
+                    "Cannot resolve constructor parameter \${$parameter->getName()} for {$class}."
+                );
+            }
+
+            $dependencies[] = $this->createInstance($type->getName());
+        }
+
+        return $reflector->newInstanceArgs($dependencies);
     }
 
     private function getActionArgs(string $controller, string $action, array $params): array

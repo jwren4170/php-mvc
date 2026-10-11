@@ -1,15 +1,16 @@
 <?php
 
-use Framework\Router;
-use Framework\Dispatcher;
 use Config\Routes;
+use Framework\Container;
+use Framework\Dispatcher;
+use Framework\Router;
 
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 spl_autoload_register(function (string $class): void {
     $classPath = str_replace('\\', '/', $class);
     $file = __DIR__ . '/' . 'src' . '/' . $classPath . '.php';
-    
+
     if (is_file($file)) {
         require $file;
     }
@@ -23,5 +24,7 @@ foreach (Routes::getRoutes() as $route => $params) {
     $router->addRoute($route, $params);
 }
 
-$dispatcher = new Dispatcher($router);
+$container = new Container();
+
+$dispatcher = new Dispatcher($router, $container);
 $dispatcher->handleRequest($path);
