@@ -26,5 +26,9 @@ foreach (Routes::getRoutes() as $route => $params) {
 
 $container = new Container();
 
+$container->set(App\Database::class, function () {
+    return new App\Database((parse_ini_file(__DIR__ . '/.env', true, INI_SCANNER_RAW)));
+});
+
 $dispatcher = new Dispatcher($router, $container);
 $dispatcher->handleRequest($path);
