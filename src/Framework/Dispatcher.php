@@ -2,14 +2,13 @@
 
 namespace Framework;
 
-use ReflectionClass;
 use ReflectionMethod;
-use ReflectionNamedType;
 
 class Dispatcher
 {
     public function __construct(
-        private Router $router
+        private Router $router,
+        private Container $container
     ) {}
 
     public function handleRequest(string $path)
@@ -32,33 +31,7 @@ class Dispatcher
 
     private function createInstance(string $class): object
     {
-        $reflector = new ReflectionClass($class);
-        $constructor = $reflector->getConstructor();
-
-        if ($constructor === null) {
-            return $reflector->newInstance();
-        }
-
-        $dependencies = [];
-
-        foreach ($constructor->getParameters() as $parameter) {
-            $type = $parameter->getType();
-
-            if (!$type instanceof ReflectionNamedType || $type->isBuiltin()) {
-                if ($parameter->isDefaultValueAvailable()) {
-                    $dependencies[] = $parameter->getDefaultValue();
-                    continue;
-                }
-
-                throw new \LogicException(
-                    "Cannot resolve constructor parameter \${$parameter->getName()} for {$class}."
-                );
-            }
-
-            $dependencies[] = $this->createInstance($type->getName());
-        }
-
-        return $reflector->newInstanceArgs($dependencies);
+        return $this->container->get($class);
     }
 
     private function getActionArgs(string $controller, string $action, array $params): array
