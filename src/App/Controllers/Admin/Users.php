@@ -1,5 +1,8 @@
 <?php
 
+// enforce strict types
+declare(strict_types=1);
+
 namespace App\Controllers\Admin;
 
 class Users

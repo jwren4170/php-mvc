@@ -1,9 +1,13 @@
 <?php
+// enforce strict types
+declare(strict_types=1);
 
 namespace Framework;
 
 use Closure;
+use InvalidArgumentException;
 use ReflectionClass;
+use ReflectionNamedType;
 
 class Container
 {
@@ -31,15 +35,13 @@ class Container
         }
 
         foreach ($constructor->getParameters() as $parameter) {
-            $type = $parameter->getType();
+            $type = (object) $parameter->getType();
 
-            if ($type && !$type->isBuiltin()) {
-                $dependencies[] = $this->get($type->getName());
-            } elseif ($parameter->isDefaultValueAvailable()) {
-                $dependencies[] = $parameter->getDefaultValue();
-            } else {
-                throw new \LogicException('Unable to resolve dependency for parameter: ' . $parameter->getName());
+            if ($type === null || $type->isBuiltin() || !$type instanceof ReflectionNamedType) {
+                throw new InvalidArgumentException('Unable to resolve dependency for parameter: ' . $parameter->getName());
             }
+
+            $dependencies[] = $this->get($type->getName());
         }
 
         return new $class(...$dependencies);

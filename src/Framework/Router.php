@@ -1,4 +1,6 @@
 <?php
+// enforce strict types
+declare(strict_types=1);
 
 namespace Framework;
 
@@ -37,15 +39,12 @@ class Router
         $segments = explode('/', trim($path, '/'));
 
         $segments = array_map(function (string $segment): string {
-
-            if (preg_match("#^\{([a-z][a-z0-9]*)\}$#", $segment, $matches)) {
-
-                return "(?<" . $matches[1] . ">[^/]*)";
+            if (preg_match('#^\{([a-z][a-z0-9]*)\}$#', $segment, $matches)) {
+                return '(?<' . $matches[1] . '>[^/]*)';
             }
 
-            if (preg_match("#^\{([a-z][a-z0-9]*):(.+)\}$#", $segment, $matches)) {
-
-                return "(?<" . $matches[1] . ">" . $matches[2] . ")";
+            if (preg_match('#^\{([a-z][a-z0-9]*):(.+)\}$#', $segment, $matches)) {
+                return '(?<' . $matches[1] . '>' . $matches[2] . ')';
             }
 
             return $segment;
