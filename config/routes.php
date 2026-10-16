@@ -2,17 +2,15 @@
 
 namespace Config;
 
-class Routes
-{
-    public static function getRoutes()
-    {
-        return [
-            '/' => ['controller' => 'home', 'action' => 'index'],
-            '/home/index' => ['controller' => 'home', 'action' => 'index'],
-            '/home' => ['controller' => 'home', 'action' => 'index'],
-            '/products' => ['controller' => 'products', 'action' => 'index'],
-            '/{controller}/{id:\d+}/{action}' => [],
-            '/{controller}/{action}' => [],
-        ];
-    }
-}
+use Framework\Router;
+
+$router = new Router();
+
+$router->addRoute('/', ['controller' => 'home', 'action' => 'index']);
+$router->addRoute('/home/index', ['controller' => 'home', 'action' => 'index']);
+$router->addRoute('/home', ['controller' => 'home', 'action' => 'index']);
+$router->addRoute('/products', ['controller' => 'products', 'action' => 'index']);
+$router->addRoute('/{controller}/{id:\d+}/{action}', []);
+$router->addRoute('/{controller}/{action}', []);
+
+return $router;

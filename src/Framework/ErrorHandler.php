@@ -14,7 +14,7 @@ class ErrorHandler
 
     public static function handleException(\Throwable $exception): void
     {
-        $show_errors = parse_ini_file(dirname(__DIR__, 2) . '/.env')['SHOW_ERRORS'] ?? false;
+        $showErrors = filter_var($_ENV['SHOW_ERRORS'] ?? false, FILTER_VALIDATE_BOOLEAN);
 
         if ($exception instanceof PageNotFoundException) {
             http_response_code(404);
@@ -24,12 +24,13 @@ class ErrorHandler
             $template = '500.php';
         }
 
-        if ($show_errors) {
+        if ($showErrors) {
             ini_set('display_errors', '1');
+            echo '<pre>' . htmlspecialchars((string) $exception, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</pre>';
         } else {
             ini_set('display_errors', '0');
             ini_set('log_errors', '1');
-            require __DIR__ . "/../../views/$template";
+            require dirname(__DIR__, 2) . "/views/$template";
         }
     }
 }
