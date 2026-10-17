@@ -1,5 +1,9 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family:
+    Georgia,
+    'Times New Roman',
+    Times,
+    serif sans-serif;
   background-color: #f0f0f0;
 }
 
@@ -27,6 +31,23 @@ main {
   background-color: #f9f9f9;
   border-radius: 8px;
   padding: 1em;
+  transition: scale 0.3s ease-in-out;
+}
+
+a {
+  color: inherit;
+}
+
+.card > a {
+  text-decoration: none;
+}
+
+a:hover {
+  scale: 1.03;
+}
+
+.card:hover {
+  scale: 1.03;
 }
 
 .card-title {
@@ -36,12 +57,14 @@ main {
 .card-name {
   font-size: 1.2em;
   margin-bottom: 0.3em;
+  text-decoration: underline;
 }
 
 .card-content {
   margin-bottom: 0.5em;
   padding: 0.5em;
 }
+
 .card-description {
   font-size: 0.9em;
   margin-bottom: 0.5em;

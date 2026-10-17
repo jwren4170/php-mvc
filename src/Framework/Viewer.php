@@ -12,7 +12,7 @@ class Viewer
 
         ob_start();
 
-        require_once dirname(__DIR__, 2) . '/views/' . $view . '.php';
+        require dirname(__DIR__, 2) . '/views/' . $view . '.php';
 
         return ob_get_clean();
     }
