@@ -46,6 +46,18 @@ a:hover {
   scale: 1.03;
 }
 
+a.new-product {
+  width: 14ch;
+  max-width: 15ch;
+  background: #666;
+  text-align: center;
+  margin-bottom: 1rem;
+  padding-block: 0.875rem;
+  padding-inline: 0.875rem;
+  border-radius: 20px;
+  font-size: 1.125em;
+}
+
 .card:hover {
   scale: 1.03;
 }
@@ -58,6 +70,7 @@ a:hover {
   font-size: 1.2em;
   margin-bottom: 0.3em;
   text-decoration: underline;
+  color: black;
 }
 
 .card-content {
@@ -68,4 +81,8 @@ a:hover {
 .card-description {
   font-size: 0.9em;
   margin-bottom: 0.5em;
+}
+
+p.card-description {
+  color: black;
 }

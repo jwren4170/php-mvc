@@ -1,5 +1,8 @@
 <main>
+    <a class="new-product" href="/products/new" style="display: block;">New Product</a>
+
     <div class="card-container">
+
         <?php foreach (isset($products) ? $products : [] as $product): ?>
         <div class="card">
             <a href="/products/<?= $product->id ?>/show">
@@ -12,5 +15,6 @@
             </a>
         </div>
         <?php endforeach; ?>
+
     </div>
 </main>

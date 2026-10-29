@@ -18,7 +18,7 @@ class Products
     public function index()
     {
         $title = 'Products';
-        $products = $this->model->getProducts();
+        $products = $this->model->findAll();
 
         echo $this->viewer->render('shared/header', compact('title'));
         echo $this->viewer->render('Products/index', compact('products'));
@@ -28,7 +28,7 @@ class Products
     public function show(string $id)
     {
         $title = 'Product Details';
-        $product = $this->model->getProduct($id);
+        $product = $this->model->findOne($id);
 
         if (!$product)
             throw new PageNotFoundException('Product not found');
@@ -36,5 +36,29 @@ class Products
         echo $this->viewer->render('shared/header', compact('title'));
         echo $this->viewer->render('Products/show', compact('product'));
         echo $this->viewer->render('shared/footer');
+    }
+
+    public function showPage(string $title, string $id, string $page)
+    {
+        echo $title . ' ' . $id . ' ' . $page;
+    }
+
+    public function new()
+    {
+        $title = 'New Product';
+
+        echo $this->viewer->render('shared/header', compact('title'));
+        echo $this->viewer->render('Products/new');
+        echo $this->viewer->render('shared/footer');
+    }
+
+    public function create()
+    {
+        $data = [
+            'name' => $_POST['name'],
+            'description' => $_POST['description'],
+        ];
+
+        var_dump($this->model->insert($data));
     }
 }

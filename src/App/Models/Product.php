@@ -2,34 +2,9 @@
 
 namespace App\Models;
 
-use App\Database;
-use PDO;
-use PDOException;
+use Framework\Model;
 
-class Product
+class Product extends Model
 {
-    public function __construct(
-        private Database $conn
-    ) {}
-
-    public function getProducts(): array|bool
-    {
-        $conn = $this->conn->getConnection();
-
-        $sql = 'SELECT * FROM product';
-        $stmt = $conn->query($sql);
-        $stmt->execute();
-        return $stmt->fetchAll();
-    }
-
-    public function getProduct(string $id)
-    {
-        $conn = $this->conn->getConnection();
-
-        $sql = 'SELECT * FROM product WHERE id = :id';
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        return $stmt->fetch();
-    }
+    // protected $table = 'product';
 }
