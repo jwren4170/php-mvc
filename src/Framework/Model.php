@@ -13,8 +13,10 @@ abstract class Model
     /** @disregard */
     protected $table;
 
+    abstract protected function validate(array $data): bool;
+
     public function __construct(
-        private Database $conn
+        private Database $conn,
     ) {}
 
     private function getTable(): string
@@ -50,12 +52,30 @@ abstract class Model
 
     public function insert(array $data)
     {
-        $sql = 'INSERT INTO product(name, description) VALUES(?,?)';
+        if (!$this->validate($data)) {
+            return false;
+        }
+
+        $columns = implode(', ', array_keys($data));
+        $placeholders = implode(', ', array_fill(0, count($data), '?'));
+
+        $sql = 'INSERT INTO ' . $this->getTable() . ' (' . $columns . ') VALUES (' . $placeholders . ')';
 
         $conn = $this->conn->getConnection();
         $stmt = $conn->prepare($sql);
-        $stmt->bindValue(1, $data['name'], PDO::PARAM_STR);
-        $stmt->bindValue(2, $data['description'], PDO::PARAM_STR);
+
+        $i = 1;
+        foreach ($data as $value) {
+            $type = match (gettype($value)) {
+                'boolean' => PDO::PARAM_BOOL,
+                'integer' => PDO::PARAM_INT,
+                'null' => PDO::PARAM_NULL,
+                default => PDO::PARAM_STR,
+            };
+
+            $stmt->bindValue($i++, $value, $type);
+        }
+
         return $stmt->execute();
     }
 }

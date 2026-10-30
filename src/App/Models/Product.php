@@ -7,4 +7,24 @@ use Framework\Model;
 class Product extends Model
 {
     // protected $table = 'product';
+
+    protected array $errors = [];
+
+    public function addError(string $field, string $message): void
+    {
+        $this->errors[$field] = $message;
+    }
+
+    protected function validate(array $data): bool
+    {
+        if (empty($data['name']))
+            $this->addError('name', 'Name is required');
+
+        return empty($this->errors);
+    }
+
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
 }
